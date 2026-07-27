@@ -41,4 +41,8 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 USER printer
 
+# Checa se algo realmente foi provisionado no volume compartilhado.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD find /mnt/printer_shared -mindepth 1 -print -quit | grep -q .
+
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
