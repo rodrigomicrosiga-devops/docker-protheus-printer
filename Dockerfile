@@ -24,15 +24,21 @@ LABEL maintainer="Rodrigo dos Santos Brandão <rodrigomicrosiga>" \
       version="3.0.5" \
       description="TOTVS Printer - Delivery Container - Ultra Light"
 
+# Usuário não-root: este container só extrai um arquivo pro volume compartilhado
+# e fica em standby, não precisa de privilégio nenhum.
+RUN addgroup -S printer && adduser -S -G printer printer
+
 WORKDIR /tmp
 
 # Cria o ponto de montagem do volume compartilhado do Printer
-RUN mkdir -p /mnt/printer_shared
+RUN mkdir -p /mnt/printer_shared && chown -R printer:printer /mnt/printer_shared
 
 # Copia os arquivos limpos do estágio do builder para a pasta correta do printer
-COPY --from=builder /tmp/build/printer /tmp/printer
+COPY --from=builder --chown=printer:printer /tmp/build/printer /tmp/printer
 
-COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY --chown=printer:printer ./entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+USER printer
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
