@@ -65,3 +65,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: rodrigomicrosiga/printer-dev:3.0.5
+          labels: |
+            org.opencontainers.image.revision=${{ github.sha }}

@@ -31,6 +31,14 @@ graph TD
 
 * `Flexibilidade de Artefatos`: O pipeline aceita qualquer arquivo .tar.gz oficial da TOTVS sem necessidade de renomeação manual (ex: 26-06-23-PRINTER_LINUX_X64.TAR.GZ).
 
+### 🏷️ Rastreabilidade de Build
+
+A tag da imagem publicada permanece fixa (`3.0.5`) entre builds — só muda quando a `TOTVS` libera uma nova versão do Printer. Para rastrear qual commit gerou um build específico sem depender da tag, o `pipeline` grava o label `org.opencontainers.image.revision` com o SHA do commit em toda imagem publicada:
+
+```bash
+docker inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' rodrigomicrosiga/printer-dev:3.0.5
+```
+
 ### 🛠️ Como Contribuir e Atualizar
 
 Se uma nova versão do `TOTVS Printer` for disponibilizada pela `TOTVS`:
