@@ -20,8 +20,11 @@ RUN find printer/ -type f -exec strip --strip-unneeded {} + 2>/dev/null || true
 # ESTÁGIO 2: Runner (Imagem Enxuta de Delivery)
 # ==============================================================================
 FROM alpine:3.19 AS runner
+# Versão do componente: vem do construtor (build-arg), sem valor padrão para não rotular a imagem errada.
+ARG PRINTER_VERSION
+RUN test -n "${PRINTER_VERSION}" || { echo "ERRO: passe --build-arg PRINTER_VERSION=<versão>" >&2; exit 1; }
 LABEL maintainer="Rodrigo dos Santos Brandão <rodrigomicrosiga>" \
-      version="3.0.5" \
+      version="${PRINTER_VERSION}" \
       description="TOTVS Printer - Delivery Container - Ultra Light"
 
 # Usuário não-root: este container só extrai um arquivo pro volume compartilhado
